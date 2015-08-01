@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="@drawable/cover"
     >
+<!--header-->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Neurix"
+            android:textColor="#ff9b31ff"
+            android:textSize="40sp" />
+    </RelativeLayout>
+
+
+
+
+
     <GridView
         android:layout_marginTop="60dp"
         android:id="@+id/gridview"
@@ -14,4 +36,4 @@
         android:horizontalSpacing="0dp"
         android:stretchMode="columnWidth"
         android:numColumns="2" />
-</FrameLayout>
+</RelativeLayout>
