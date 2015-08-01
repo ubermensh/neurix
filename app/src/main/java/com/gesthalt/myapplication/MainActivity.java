@@ -39,16 +39,6 @@ public class MainActivity extends Activity
 
         });
 
-
-
-
-/*        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                // this 'mActivity' parameter is Activity object, you can send the current activity.
-                Intent i = new Intent(mActivity, ActvityToCall.class);
-                mActivity.startActivity(i);
-            }
-        });*/
     }
 
     private class MyAdapter extends BaseAdapter
