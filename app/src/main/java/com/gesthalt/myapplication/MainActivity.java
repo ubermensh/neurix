@@ -1,52 +1,112 @@
 package com.gesthalt.myapplication;
-
-import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.app.Activity;
+import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this));
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(MainActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
+        GridView gridView = (GridView)findViewById(R.id.gridview);
+        gridView.setAdapter(new MyAdapter(this));
+
+
+
+/*        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                // this 'mActivity' parameter is Activity object, you can send the current activity.
+                Intent i = new Intent(mActivity, ActvityToCall.class);
+                mActivity.startActivity(i);
             }
-        });
+        });*/
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    private class MyAdapter extends BaseAdapter
+    {
+        private List<Item> items = new ArrayList<Item>();
+        private LayoutInflater inflater;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        public MyAdapter(Context context)
+        {
+            inflater = LayoutInflater.from(context);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            items.add(new Item("Image 1", R.drawable.sample_0));
+            items.add(new Item("Image 2", R.drawable.sample_1));
+            items.add(new Item("Image 3", R.drawable.sample_2));
+            items.add(new Item("Image 4", R.drawable.sample_3));
+
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int i)
+        {
+            return items.get(i);
+        }
+
+        @Override
+        public long getItemId(int i)
+        {
+            return items.get(i).drawableId;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup)
+        {
+            View v = view;
+            ImageView picture;
+            TextView name;
+
+            if(v == null)
+            {
+                v = inflater.inflate(R.layout.gridview_item, viewGroup, false);
+                v.setTag(R.id.picture, v.findViewById(R.id.picture));
+                v.setTag(R.id.text, v.findViewById(R.id.text));
+            }
+
+            picture = (ImageView)v.getTag(R.id.picture);
+            name = (TextView)v.getTag(R.id.text);
+
+            Item item = (Item)getItem(i);
+
+            picture.setImageResource(item.drawableId);
+            name.setText(item.name);
+
+            return v;
+        }
+
+        private class Item
+        {
+            final String name;
+            final int drawableId;
+
+            Item(String name, int drawableId)
+            {
+                this.name = name;
+                this.drawableId = drawableId;
+            }
+        }
     }
 }
