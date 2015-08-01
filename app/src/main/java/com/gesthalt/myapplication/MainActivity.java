@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,17 @@ public class MainActivity extends Activity
 
         GridView gridView = (GridView)findViewById(R.id.gridview);
         gridView.setAdapter(new MyAdapter(this));
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.print( "here!!!!!!!!!!!!" + position);
+                Toast.makeText(MainActivity.this, "position = " + position,
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
 
 
 
