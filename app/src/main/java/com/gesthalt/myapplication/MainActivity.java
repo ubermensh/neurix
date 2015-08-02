@@ -14,12 +14,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity
 {
 
+//    private RequestQueue mRequestQueue;
+//    private ImageLoader imageLoader;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -32,7 +37,7 @@ public class MainActivity extends Activity
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.print( "here!!!!!!!!!!!!" + position);
+                System.out.print("here!!!!!!!!!!!!" + position);
                 Toast.makeText(MainActivity.this, "position = " + position,
                         Toast.LENGTH_SHORT).show();
             }
