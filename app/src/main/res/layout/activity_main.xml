@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/horizontalScrollView"
             android:background="#FC0"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" >
             <LinearLayout
                 android:layout_width="wrap_content"

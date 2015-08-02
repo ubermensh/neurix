@@ -1,6 +1,8 @@
 package com.gesthalt.myapplication;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +83,7 @@ public class MainActivity extends Activity
                     // Parsing json object response
                     // response will be a json object
                     JSONArray images = response.getJSONArray("images");
+                    setImagesToScrollView(images);
                     Toast.makeText(getApplicationContext(),
                             images.toString(), Toast.LENGTH_SHORT).show();
 
@@ -99,7 +107,42 @@ public class MainActivity extends Activity
         AppController.getInstance().addToRequestQueue(jsonObjReq);
     }
 
+    private void setImagesToScrollView(JSONArray images){
+        for (int i = 0; i < images.length(); i++) {
+            ImageView imgView = new ImageView(this);
+            JSONObject img = null;
+            try {
+                img = (JSONObject)images.get(i);
+                imgView.setImageBitmap(getBitmapFromURL((String) img.get("imgThumbUrl")));
+                System.out.println("here1111111");
+//                RelativeLayout rl = (RelativeLayout) findViewById(R.id.)
+//                GridView gridView = (GridView)findViewById(R.id.gridview);
+//                findViewById()
+//                imgView.setImageBitmap(getBitmapFromURL());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
+
+        }
+    }
+
+
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
 
     private class MyAdapter extends BaseAdapter
     {
