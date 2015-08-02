@@ -23,10 +23,6 @@
             android:textSize="40sp" />
     </RelativeLayout>
 
-
-
-
-
     <GridView
         android:layout_marginTop="60dp"
         android:id="@+id/gridview"
@@ -37,18 +33,46 @@
         android:stretchMode="columnWidth"
         android:numColumns="2" />
 
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:id="@+id/horizontalScrollView"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:id="@+id/myContainer" />
 
 
-    </HorizontalScrollView>
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/horizontalScrollView"
+            android:background="#FC0"
+            android:layout_centerHorizontal="true" >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/myContainer" >
+
+                <RelativeLayout
+                    android:id="@+id/relative1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_wheels"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image"
+                        android:layout_centerHorizontal="true"
+                        android:text=" Text" />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+        </HorizontalScrollView>
+
+
 </RelativeLayout>

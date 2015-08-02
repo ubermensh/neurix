@@ -14,8 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +33,11 @@ import java.util.List;
 public class MainActivity extends Activity
 {
 
-//    private RequestQueue mRequestQueue;
+    // json object response url
+    private String urlJsonObj = "http://52.27.129.146/uploads";
+
+
+    //    private RequestQueue mRequestQueue;
 //    private ImageLoader imageLoader;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,9 +45,9 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        makeJsonObjectRequest();
         GridView gridView = (GridView)findViewById(R.id.gridview);
         gridView.setAdapter(new MyAdapter(this));
-
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -45,6 +59,47 @@ public class MainActivity extends Activity
         });
 
     }
+
+    /**
+     * Method to make json object request where json response starts wtih {
+     * */
+    private void makeJsonObjectRequest() {
+
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                urlJsonObj, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    // Parsing json object response
+                    // response will be a json object
+                    JSONArray images = response.getJSONArray("images");
+                    Toast.makeText(getApplicationContext(),
+                            images.toString(), Toast.LENGTH_SHORT).show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),
+                            "Error: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(jsonObjReq);
+    }
+
+
 
     private class MyAdapter extends BaseAdapter
     {
