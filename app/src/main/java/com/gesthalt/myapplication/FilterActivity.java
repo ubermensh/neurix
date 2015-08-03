@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 
@@ -38,7 +41,7 @@ public class FilterActivity extends ActionBarActivity {
         int filterPosition = getIntent().getIntExtra("position", 0);
         Toast.makeText(FilterActivity.this, " filter position = " + filterPosition,
                 Toast.LENGTH_SHORT).show();
-        
+
     }
 
     public void loadImageFromGallery(View view) {
@@ -62,7 +65,7 @@ public class FilterActivity extends ActionBarActivity {
                 // Get the Image from data
 
                 Uri selectedImage = data.getData();
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
                 // Get the cursor
                 Cursor cursor = getContentResolver().query(selectedImage,
@@ -73,15 +76,44 @@ public class FilterActivity extends ActionBarActivity {
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imgPath = cursor.getString(columnIndex);
                 cursor.close();
-                ImageView imgView = (ImageView) findViewById(R.id.imgView);
-                // Set the Image in ImageView
-                imgView.setImageBitmap(BitmapFactory
-                        .decodeFile(imgPath));
+
                 // Get the Image's file name
                 String fileNameSegments[] = imgPath.split("/");
                 fileName = fileNameSegments[fileNameSegments.length - 1];
                 // Put file name in Async Http Post Param which will used in Php web app
                 params.put("filename", fileName);
+
+                AsyncHttpClient client = new AsyncHttpClient();
+
+                client.post("http://52.27.129.146/upload",
+                    params, new AsyncHttpResponseHandler() {
+                        // When the response returned by REST has Http
+                        // response code '200'
+                        @Override
+                        public void onSuccess(String response) {
+                            // Hide Progress Dialog
+                            prgDialog.hide();
+                            Toast.makeText(getApplicationContext(), response,
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                        // When the response returned by REST has Http
+                        // response code other than '200' such as '404',
+                        // '500' or '403' etc
+                        @Override
+                        public void onFailure(int statusCode, Throwable error,
+                                              String content) {
+                            // Hide Progress Dialog
+                            prgDialog.hide();
+
+                        }
+                        });
+
+/*                ImageView imgView = (ImageView) findViewById(R.id.imgView);
+                // Set the Image in ImageView
+                imgView.setImageBitmap(BitmapFactory
+                        .decodeFile(imgPath));*/
+
 
             } else {
                 Toast.makeText(this, "You haven't picked Image",
