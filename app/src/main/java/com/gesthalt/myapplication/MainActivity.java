@@ -66,6 +66,8 @@ public class MainActivity extends Activity {
                 Toast.makeText(MainActivity.this, "position = " + position,
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(view.getContext(), FilterActivity.class);
+                intent.putExtra("position", position);
+                startActivity(intent);
             }
 
         });
