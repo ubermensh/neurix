@@ -26,6 +26,7 @@ public class FilterActivity extends ActionBarActivity {
     String imgPath, fileName;
     Bitmap bitmap;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +34,10 @@ public class FilterActivity extends ActionBarActivity {
         prgDialog = new ProgressDialog(this);
         // Set Cancelable as False
         prgDialog.setCancelable(false);
+
+        int filterPosition = getIntent().getIntExtra("position", 0);
+        Toast.makeText(FilterActivity.this, " filter position = " + filterPosition,
+                Toast.LENGTH_SHORT).show();
         
     }
 
