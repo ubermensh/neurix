@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -52,20 +53,25 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        makeJsonObjectRequest();
+//        makeJsonObjectRequest();
         GridView gridView = (GridView) findViewById(R.id.gridview);
         gridView.setAdapter(new MyAdapter(this));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            //user clicked on one of filters in grid view
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.print("here!!!!!!!!!!!!" + position);
+
+                Log.d("AAA", "filter position = " + position);
                 Toast.makeText(MainActivity.this, "position = " + position,
                         Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(view.getContext(), FilterActivity.class);
             }
 
         });
 
     }
+
 
     /**
      * Method to make json object request where json response starts wtih {
@@ -115,19 +121,6 @@ public class MainActivity extends Activity {
                 img = (JSONObject) images.get(i);
                 imgView.setImageBitmap(getBitmapFromURL((String) img.get("imgThumbUrl")));
                 System.out.println("here1111111");
-                //hinduist horror
-//                RelativeLayout rl = (RelativeLayout) findViewById(R.id.relative1);
-                RelativeLayout rl = new RelativeLayout(this);
-                RelativeLayout.LayoutParams lp =
-                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                RelativeLayout.LayoutParams lp1 =
-                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                lp1.setMargins(0, 0, 10, 0);
-                rl.setLayoutParams(lp1);
-                imgView.setLayoutParams(lp);
-                rl.addView(imgView);
-                LinearLayout lr = (LinearLayout) findViewById((R.id.linearInHorScView));
-                lr.addView(rl);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -159,11 +152,15 @@ public class MainActivity extends Activity {
 
         public MyAdapter(Context context) {
             inflater = LayoutInflater.from(context);
-
-            items.add(new Item("Image 1", R.drawable.sample_0));
-            items.add(new Item("Image 2", R.drawable.sample_1));
-            items.add(new Item("Image 3", R.drawable.sample_2));
-            items.add(new Item("Image 4", R.drawable.sample_3));
+            // positions in comments
+            items.add(new Item("Neuralife", R.drawable.neuralife)); //0
+            items.add(new Item("NeuraTrip", R.drawable.neuraltrip));//1
+            items.add(new Item("NeuralVortex", R.drawable.neuralvortex));//2
+            items.add(new Item("NeuralFlow", R.drawable.neuralflow));//3
+            items.add(new Item("NeuralWave", R.drawable.neuralwave));//4
+            items.add(new Item("Neuralice", R.drawable.neuralice));//5
+            items.add(new Item("NeuralAztec", R.drawable.neuralaztec));//6
+            items.add(new Item("NeuralLizard", R.drawable.neurallizard));//7
 
         }
 
