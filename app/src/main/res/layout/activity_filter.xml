@@ -18,8 +18,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ff6d8eff"
+
+        android:textColor="#ffffffff"
         android:text="choose picture"
+        android:background="@drawable/buttonshape"
         android:onClick="loadImageFromGallery"
         android:id="@+id/choose_picture_button"
         android:layout_alignParentBottom="true"
