@@ -76,8 +76,10 @@ public class MainActivity extends Activity {
 
 
     /**
+     * !! not used, but working
      * Method to make json object request where json response starts wtih {
      */
+/*
     private void makeJsonObjectRequest() {
 
 
@@ -147,6 +149,7 @@ public class MainActivity extends Activity {
             return null;
         }
     }
+*/
 
     private class MyAdapter extends BaseAdapter {
         private List<Item> items = new ArrayList<Item>();
