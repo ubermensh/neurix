@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
 
@@ -84,7 +85,8 @@ public class FilterActivity extends ActionBarActivity {
                 params.put("filename", fileName);
 
                 AsyncHttpClient client = new AsyncHttpClient();
-
+                PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
+                client.setCookieStore(myCookieStore);
                 client.post("http://52.27.129.146/upload",
                     params, new AsyncHttpResponseHandler() {
                         // When the response returned by REST has Http

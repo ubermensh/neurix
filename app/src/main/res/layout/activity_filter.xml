@@ -9,6 +9,23 @@
     android:background="@drawable/cover"
     tools:context="com.gesthalt.myapplication.FilterActivity">
 
+    <!--header-->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Neurix"
+            android:textColor="#ff9b31ff"
+            android:textSize="40sp" />
+
+    </RelativeLayout>
     <ImageView
         android:id="@+id/imgView"
         android:layout_width="fill_parent"
@@ -26,6 +43,6 @@
         android:id="@+id/choose_picture_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="47dp" />
+        android:layout_marginBottom="30dp" />
 
 </RelativeLayout>
