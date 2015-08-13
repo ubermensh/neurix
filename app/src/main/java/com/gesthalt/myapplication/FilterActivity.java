@@ -149,6 +149,10 @@ public class FilterActivity extends ActionBarActivity {
                     JSONObject jsonResponse = new JSONObject(response);
                     if (jsonResponse.get("status") == "done") {
                         Object image = jsonResponse.get("result");
+                        //start activity to show converted picture
+/*                        Intent intent = new Intent(view.getContext(), ShowConvertedActivity.class);
+                        intent.putExtra("convertedImage", image);
+                        startActivity(intent);*/
                     } else {
                         pauseThread();
                         getConvertedPicture();
