@@ -130,6 +130,7 @@ public class FilterActivity extends ActionBarActivity {
             public void onSuccess(String response) {
                 getConvertedPicture();
             }
+
             @Override
             public void onFailure(int statusCode, Throwable error, String content) {
                 Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
@@ -150,9 +151,8 @@ public class FilterActivity extends ActionBarActivity {
                     if (jsonResponse.get("status") == "done") {
                         Object image = jsonResponse.get("result");
                         //start activity to show converted picture
-/*                        Intent intent = new Intent(view.getContext(), ShowConvertedActivity.class);
-                        intent.putExtra("convertedImage", image);
-                        startActivity(intent);*/
+                        startShowConvertedActivity(image);
+
                     } else {
                         pauseThread();
                         getConvertedPicture();
@@ -168,7 +168,16 @@ public class FilterActivity extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
             }
         });
-    };
+    }
+
+    private void startShowConvertedActivity(Object image) {
+        Intent intent = new Intent(this, ShowConvertedActivity.class);
+//        intent.putExtra("convertedImage", image);
+        startActivity(intent);
+
+    }
+
+
 
     private void pauseThread() {
         try {
