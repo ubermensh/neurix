@@ -3,16 +3,13 @@ package com.gesthalt.myapplication;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -21,16 +18,15 @@ import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 
 public class FilterActivity extends ActionBarActivity {
 
     private static int RESULT_LOAD_IMG = 1;
     ProgressDialog prgDialog;
-    String encodedString;
     RequestParams params = new RequestParams();
-    String imgPath, fileName;
-    Bitmap bitmap;
+    String imgPath;
 
 
     @Override
@@ -70,51 +66,14 @@ public class FilterActivity extends ActionBarActivity {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-                // Get the cursor
                 Cursor cursor = getContentResolver().query(selectedImage,
                         filePathColumn, null, null, null);
-                // Move to first row
                 cursor.moveToFirst();
-
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imgPath = cursor.getString(columnIndex);
                 cursor.close();
                 File imageFile = new File(imgPath);
-
-
-                params.put("image", imageFile);
-
-                AsyncHttpClient client = new AsyncHttpClient();
-                PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
-                client.setCookieStore(myCookieStore);
-                client.post("http://52.27.129.146/upload",
-                    params, new AsyncHttpResponseHandler() {
-                        // When the response returned by REST has Http
-                        // response code '200'
-                        @Override
-                        public void onSuccess(String response) {
-                            // Hide Progress Dialog
-                            prgDialog.hide();
-                            Toast.makeText(getApplicationContext(), response,
-                                    Toast.LENGTH_LONG).show();
-                        }
-
-                        // When the response returned by REST has Http
-                        // response code other than '200' such as '404',
-                        // '500' or '403' etc
-                        @Override
-                        public void onFailure(int statusCode, Throwable error,
-                                              String content) {
-                            // Hide Progress Dialog
-                            prgDialog.hide();
-
-                        }
-                        });
-
-/*                ImageView imgView = (ImageView) findViewById(R.id.imgView);
-                // Set the Image in ImageView
-                imgView.setImageBitmap(BitmapFactory
-                        .decodeFile(imgPath));*/
+                uploadPicture(imageFile);
 
 
             } else {
@@ -127,6 +86,30 @@ public class FilterActivity extends ActionBarActivity {
         }
 
     }
+
+    private void uploadPicture(File imageFile) throws FileNotFoundException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
+        client.setCookieStore(myCookieStore);
+        params.put("image", imageFile);
+        client.post("http://52.27.129.146/upload", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                prgDialog.hide();
+                Toast.makeText(getApplicationContext(), response,
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
+                prgDialog.hide();
+
+            }
+        });
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
