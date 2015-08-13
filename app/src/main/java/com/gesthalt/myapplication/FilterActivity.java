@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
+import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 
 import java.io.File;
@@ -115,15 +116,20 @@ public class FilterActivity extends ActionBarActivity {
                 prgDialog.hide();
 
             }
+            @Override
+            public void onRetry() {
+                System.out.println("asadfaff");
+            }
         });
     }
 
     private void convertPicture(){
-
-        client.get("http://52.27.129.146/convert?type=" + filters[filterPosition], new AsyncHttpResponseHandler(){
+        String path = "http://52.27.129.146/convert?type=" + filters[filterPosition];
+        client.get(path, new AsyncHttpResponseHandler(){
             @Override
             public void onSuccess(String response) {
                 Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                getConvertedPicture();
             }
 
             @Override
@@ -131,9 +137,37 @@ public class FilterActivity extends ActionBarActivity {
                                   String content) {
                 Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
             }
+
+            @Override
+            public void onRetry() {
+                System.out.println("affafas");
+            }
         });
 
     }
+
+    private void getConvertedPicture(){
+
+        client.get("http://52.27.129.146/status", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                System.out.println("efffs");
+/*                if (response.status== "done"){
+                    Object image = status.result;
+                }
+                else{
+                    getConvertedPicture();
+                }*/
+            }
+
+
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
+            }
+        });
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
