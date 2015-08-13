@@ -27,7 +27,14 @@ public class FilterActivity extends ActionBarActivity {
     ProgressDialog prgDialog;
     RequestParams params = new RequestParams();
     String imgPath;
-
+    AsyncHttpClient client;
+    PersistentCookieStore myCookieStore;
+    int filterPosition; //position of filter in filters array
+    String[] filters = {
+            "Neuralife", "NeuraTrip", "NeuralVortex",
+            "NeuralFlow", "NeuralWave", "Neuralice",
+            "NeuralAztec", "NeuralLizard"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +44,13 @@ public class FilterActivity extends ActionBarActivity {
         // Set Cancelable as False
         prgDialog.setCancelable(false);
 
-        int filterPosition = getIntent().getIntExtra("position", 0);
+        filterPosition = getIntent().getIntExtra("position", 0);
         Toast.makeText(FilterActivity.this, " filter position = " + filterPosition,
                 Toast.LENGTH_SHORT).show();
+
+        client = new AsyncHttpClient();
+        myCookieStore = new PersistentCookieStore(this);
+        client.setCookieStore(myCookieStore);
 
     }
 
@@ -77,27 +88,24 @@ public class FilterActivity extends ActionBarActivity {
 
 
             } else {
-                Toast.makeText(this, "You haven't picked Image",
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
         }
 
     }
 
     private void uploadPicture(File imageFile) throws FileNotFoundException {
-        AsyncHttpClient client = new AsyncHttpClient();
-        PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
-        client.setCookieStore(myCookieStore);
+
         params.put("image", imageFile);
         client.post("http://52.27.129.146/upload", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
                 prgDialog.hide();
-                Toast.makeText(getApplicationContext(), response,
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                convertPicture();
             }
 
             @Override
@@ -110,6 +118,22 @@ public class FilterActivity extends ActionBarActivity {
         });
     }
 
+    private void convertPicture(){
+
+        client.get("http://52.27.129.146/convert?type=" + filters[filterPosition], new AsyncHttpResponseHandler(){
+            @Override
+            public void onSuccess(String response) {
+                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Throwable error,
+                                  String content) {
+                Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
