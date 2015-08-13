@@ -18,6 +18,9 @@ import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -116,50 +119,44 @@ public class FilterActivity extends ActionBarActivity {
                 prgDialog.hide();
 
             }
-            @Override
-            public void onRetry() {
-                System.out.println("asadfaff");
-            }
+
         });
     }
 
     private void convertPicture(){
         String path = "http://52.27.129.146/convert?type=" + filters[filterPosition];
-        client.get(path, new AsyncHttpResponseHandler(){
+        client.get(path, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
-                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                 getConvertedPicture();
             }
-
             @Override
-            public void onFailure(int statusCode, Throwable error,
-                                  String content) {
+            public void onFailure(int statusCode, Throwable error, String content) {
                 Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
             }
 
-            @Override
-            public void onRetry() {
-                System.out.println("affafas");
-            }
         });
 
     }
 
+    //recursive
     private void getConvertedPicture(){
 
         client.get("http://52.27.129.146/status", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
-                System.out.println("efffs");
-/*                if (response.status== "done"){
-                    Object image = status.result;
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    if (jsonResponse.get("status") == "done") {
+                        Object image = jsonResponse.get("result");
+                    } else {
+                        pauseThread();
+                        getConvertedPicture();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else{
-                    getConvertedPicture();
-                }*/
             }
-
 
             @Override
             public void onFailure(int statusCode, Throwable error,
@@ -169,6 +166,13 @@ public class FilterActivity extends ActionBarActivity {
         });
     };
 
+    private void pauseThread() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
