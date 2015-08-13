@@ -20,6 +20,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 
+import java.io.File;
+
 
 public class FilterActivity extends ActionBarActivity {
 
@@ -77,12 +79,10 @@ public class FilterActivity extends ActionBarActivity {
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imgPath = cursor.getString(columnIndex);
                 cursor.close();
+                File imageFile = new File(imgPath);
 
-                // Get the Image's file name
-                String fileNameSegments[] = imgPath.split("/");
-                fileName = fileNameSegments[fileNameSegments.length - 1];
-                // Put file name in Async Http Post Param which will used in Php web app
-                params.put("filename", fileName);
+
+                params.put("image", imageFile);
 
                 AsyncHttpClient client = new AsyncHttpClient();
                 PersistentCookieStore myCookieStore = new PersistentCookieStore(this);

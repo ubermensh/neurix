@@ -43,7 +43,7 @@ import java.util.List;
 public class MainActivity extends Activity {
 
     // json object response url
-    private String urlJsonObj = "http://52.27.129.146/uploads";
+//    private String urlJsonObj = "http://52.27.129.146/uploads";
 
 
     //    private RequestQueue mRequestQueue;
