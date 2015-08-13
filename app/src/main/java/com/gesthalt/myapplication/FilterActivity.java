@@ -32,9 +32,9 @@ public class FilterActivity extends ActionBarActivity {
     PersistentCookieStore myCookieStore;
     int filterPosition; //position of filter in filters array
     String[] filters = {
-            "Neuralife", "NeuraTrip", "NeuralVortex",
-            "NeuralFlow", "NeuralWave", "Neuralice",
-            "NeuralAztec", "NeuralLizard"
+            "neuralife", "neuraltrip", "neuralvortex",
+            "neuralflow", "neuralwave", "neuralice",
+            "neuralaztec", "neurallizard"
     };
 
     @Override
