@@ -103,7 +103,7 @@ public class FilterActivity extends ActionBarActivity {
     private void uploadPicture(File imageFile) throws FileNotFoundException {
 
         params.put("image", imageFile);
-        client.post("http://52.27.129.146/upload", params, new AsyncHttpResponseHandler() {
+        client.post("http://52.27.129.146:888/upload", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
                 prgDialog.hide();
@@ -124,7 +124,7 @@ public class FilterActivity extends ActionBarActivity {
     }
 
     private void convertPicture(){
-        String path = "http://52.27.129.146/convert?type=" + filters[filterPosition];
+        String path = "http://52.27.129.146:888/convert?type=" + filters[filterPosition];
         client.get(path, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
@@ -143,7 +143,7 @@ public class FilterActivity extends ActionBarActivity {
     //recursive
     private void getConvertedPicture(){
 
-        client.get("http://52.27.129.146/status", new AsyncHttpResponseHandler() {
+        client.get("http://52.27.129.146:888/status", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
                 try {
