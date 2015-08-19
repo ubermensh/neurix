@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -69,6 +70,8 @@ public class FilterActivity extends ActionBarActivity {
     }
 
 
+
+
     // When Image is selected from Gallery
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -77,19 +80,11 @@ public class FilterActivity extends ActionBarActivity {
             // When an Image is picked
             if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
                     && null != data) {
-                // Get the Image from data
 
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                imgPath = cursor.getString(columnIndex);
-                cursor.close();
-                File imageFile = new File(imgPath);
-                uploadPicture(imageFile);
+
+                ConvertTask convertTask = new ConvertTask(data);
+                convertTask.execute();
 
 
             } else {
@@ -101,6 +96,39 @@ public class FilterActivity extends ActionBarActivity {
 
     }
 
+    class ConvertTask extends AsyncTask<Void, Void, Void>{
+
+        Intent data;
+        public ConvertTask(Intent data) {
+            super();
+            this.data = data;
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            // Get the Image from data
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            imgPath = cursor.getString(columnIndex);
+            cursor.close();
+            File imageFile = new File(imgPath);
+            try {
+                uploadPicture(imageFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        return null;
+
+        }
+
+    }
     private void uploadPicture(File imageFile) throws FileNotFoundException {
 
         params.put("image", imageFile);
@@ -116,7 +144,7 @@ public class FilterActivity extends ActionBarActivity {
             @Override
             public void onFailure(int statusCode, Throwable error,
                                   String content) {
-                Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), content + error.toString(), Toast.LENGTH_LONG).show();
                 prgDialog.hide();
 
             }
