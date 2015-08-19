@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 
 public class FilterActivity extends ActionBarActivity {
 
+    private static final String PATH = "http://52.27.129.146:888/";
     private static int RESULT_LOAD_IMG = 1;
     ProgressDialog prgDialog;
     RequestParams params = new RequestParams();
@@ -103,7 +104,7 @@ public class FilterActivity extends ActionBarActivity {
     private void uploadPicture(File imageFile) throws FileNotFoundException {
 
         params.put("image", imageFile);
-        client.post("http://52.27.129.146:888/upload", params, new AsyncHttpResponseHandler() {
+        client.post(PATH + "upload", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
                 prgDialog.hide();
@@ -124,7 +125,7 @@ public class FilterActivity extends ActionBarActivity {
     }
 
     private void convertPicture(){
-        String path = "http://52.27.129.146:888/convert?type=" + filters[filterPosition];
+        String path = PATH + "convert?type=" + filters[filterPosition];
         client.get(path, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
@@ -143,7 +144,7 @@ public class FilterActivity extends ActionBarActivity {
     //recursive
     private void getConvertedPicture(){
 
-        client.get("http://52.27.129.146:888/status", new AsyncHttpResponseHandler() {
+        client.get(PATH + "status", new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(String response) {
                 try {
