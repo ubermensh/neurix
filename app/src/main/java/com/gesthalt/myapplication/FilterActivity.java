@@ -106,6 +106,12 @@ public class FilterActivity extends ActionBarActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prgDialog.show(FilterActivity.this, "Wait", "uploading...");
+        }
+
+        @Override
         protected Void doInBackground(Void... params) {
 
             // Get the Image from data
@@ -125,6 +131,12 @@ public class FilterActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
         return null;
+
+        }
+
+        protected void onPostExecute() {
+            System.out.println("dfdsdfgsd");
+            prgDialog.dismiss();
 
         }
 
