@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
-import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
@@ -31,7 +30,7 @@ public class FilterActivity extends ActionBarActivity {
     private static final String PATH = "http://52.27.129.146:888/";
     private static int RESULT_LOAD_IMG = 1;
     ProgressDialog prgDialog;
-    RequestParams params = new RequestParams();
+    RequestParams requestParams = new RequestParams();
     String imgPath;
     AsyncHttpClient client;
     PersistentCookieStore myCookieStore;
@@ -96,8 +95,9 @@ public class FilterActivity extends ActionBarActivity {
 
     }
 
-    class ConvertTask extends AsyncTask<Void, Void, Void>{
+    class ConvertTask extends AsyncTask<Void, Void, Object>{
 
+        boolean result = false;
         Intent data;
         public ConvertTask(Intent data) {
             super();
@@ -112,7 +112,7 @@ public class FilterActivity extends ActionBarActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Object doInBackground(Void... params) {
 
             // Get the Image from data
             Uri selectedImage = data.getData();
@@ -125,64 +125,61 @@ public class FilterActivity extends ActionBarActivity {
             imgPath = cursor.getString(columnIndex);
             cursor.close();
             File imageFile = new File(imgPath);
+
             try {
-                uploadPicture(imageFile);
+                requestParams.put("image", imageFile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        return null;
+
+            client.post(PATH + "upload", requestParams, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(String response) {
+                    result =true;
+                }
+
+                @Override
+                public void onFailure(int statusCode, Throwable error, String content) {
+                    result = false;
+                }
+            });
+
+            if (result){
+                String path = PATH + "convert?type=" + filters[filterPosition];
+                client.get(path, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(String response) {
+                        getConvertedPicture();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Throwable error, String content) {
+                        result = false;
+                    }
+
+                });
+            }
+            if (result){
+                Object picture = getConvertedPicture();
+            }
+
+
+            return null;
 
         }
 
-        protected void onPostExecute() {
+        @Override
+        protected void onPostExecute(Object image) {
             System.out.println("dfdsdfgsd");
             prgDialog.dismiss();
 
         }
 
     }
-    private void uploadPicture(File imageFile) throws FileNotFoundException {
 
-        params.put("image", imageFile);
-        client.post(PATH + "upload", params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(String response) {
-                prgDialog.hide();
-                Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-
-                convertPicture();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Throwable error,
-                                  String content) {
-                Toast.makeText(getApplicationContext(), content + error.toString(), Toast.LENGTH_LONG).show();
-                prgDialog.hide();
-
-            }
-
-        });
-    }
-
-    private void convertPicture(){
-        String path = PATH + "convert?type=" + filters[filterPosition];
-        client.get(path, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(String response) {
-                getConvertedPicture();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Throwable error, String content) {
-                Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
-            }
-
-        });
-
-    }
 
     //recursive
-    private void getConvertedPicture(){
+    private Object getConvertedPicture(){
 
         client.get(PATH + "status", new AsyncHttpResponseHandler() {
             @Override
@@ -209,6 +206,7 @@ public class FilterActivity extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
             }
         });
+
     }
 
     private void startShowConvertedActivity(Object image) {
