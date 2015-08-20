@@ -81,11 +81,27 @@ public class FilterActivity extends ActionBarActivity {
             if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
                     && null != data) {
 
+                // just call convertPicture
+                prgDialog.show(FilterActivity.this, "Wait", "uploading...");
+                // Get the Image from data
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
+                Cursor cursor = getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imgPath = cursor.getString(columnIndex);
+                cursor.close();
+                File imageFile = new File(imgPath);
+                try {
+                    uploadPicture(imageFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
 
-                ConvertTask convertTask = new ConvertTask(data);
-                convertTask.execute();
-
+//                ConvertTask convertTask = new ConvertTask(data);
+//                convertTask.execute();
 
             } else {
                 Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
@@ -96,7 +112,7 @@ public class FilterActivity extends ActionBarActivity {
 
     }
 
-    class ConvertTask extends AsyncTask<Void, Void, Void>{
+/*    class ConvertTask extends AsyncTask<Void, Void, Boolean>{
 
         Intent data;
         public ConvertTask(Intent data) {
@@ -112,7 +128,7 @@ public class FilterActivity extends ActionBarActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
 
             // Get the Image from data
             Uri selectedImage = data.getData();
@@ -130,17 +146,17 @@ public class FilterActivity extends ActionBarActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        return null;
-
+        return true;
         }
 
-        protected void onPostExecute() {
+        @Override
+        protected void onPostExecute(Boolean res) {
             System.out.println("dfdsdfgsd");
             prgDialog.dismiss();
-
         }
-
     }
+    */
+    //uploadPicture -> convertPicture -> getConvertedPicture
     private void uploadPicture(File imageFile) throws FileNotFoundException {
 
         params.put("image", imageFile);
@@ -149,7 +165,6 @@ public class FilterActivity extends ActionBarActivity {
             public void onSuccess(String response) {
                 prgDialog.hide();
                 Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-
                 convertPicture();
             }
 
@@ -158,9 +173,8 @@ public class FilterActivity extends ActionBarActivity {
                                   String content) {
                 Toast.makeText(getApplicationContext(), content + error.toString(), Toast.LENGTH_LONG).show();
                 prgDialog.hide();
-
+                prgDialog.dismiss();
             }
-
         });
     }
 
@@ -176,9 +190,7 @@ public class FilterActivity extends ActionBarActivity {
             public void onFailure(int statusCode, Throwable error, String content) {
                 Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
             }
-
         });
-
     }
 
     //recursive
@@ -192,6 +204,7 @@ public class FilterActivity extends ActionBarActivity {
                     if (jsonResponse.get("status") == "done") {
                         Object image = jsonResponse.get("result");
                         //start activity to show converted picture
+                        prgDialog.dismiss();
                         startShowConvertedActivity(image);
 
                     } else {
@@ -217,8 +230,6 @@ public class FilterActivity extends ActionBarActivity {
         startActivity(intent);
 
     }
-
-
 
     private void pauseThread() {
         try {
