@@ -4,15 +4,27 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 
 public class ShowConvertedActivity extends ActionBarActivity {
 
+    ImageView imageView = (ImageView)findViewById(R.id.convertedImageView);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_converted);
+
+//        imageView.setImageBitmap(image);
+
     }
+
+    public void downloadPicture(View view) {
+        System.out.println();
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,4 +47,6 @@ public class ShowConvertedActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

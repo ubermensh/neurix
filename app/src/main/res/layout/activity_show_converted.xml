@@ -2,10 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@drawable/cover"
     tools:context="com.gesthalt.myapplication.ShowConvertedActivity">
 
@@ -27,13 +23,31 @@
 
     </RelativeLayout>
     <ImageView
-        android:id="@+id/imgView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#fa2255"
+        android:id="@+id/convertedImageView"
+
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp"
+        android:src="@drawable/neuralaztec"
 
         >
+
     </ImageView>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textColor="#ffffffff"
+        android:text="download"
+        android:background="@drawable/buttonshape"
+        android:onClick="downloadPicture"
+        android:id="@+id/download_picture_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp" />
 
 
 </RelativeLayout>
