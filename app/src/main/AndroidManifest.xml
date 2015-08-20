@@ -27,6 +27,8 @@
         <activity
             android:name=".ShowConvertedActivity"
             android:label="@string/title_activity_show_converted" >
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
+
         </activity>
     </application>
 
