@@ -46,10 +46,6 @@ public class FilterActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
-        prgDialog = new ProgressDialog(this);
-        // Set Cancelable as False
-        prgDialog.setCancelable(false);
-
         filterPosition = getIntent().getIntExtra("position", 0);
         Toast.makeText(FilterActivity.this, " filter position = " + filterPosition,
                 Toast.LENGTH_SHORT).show();
@@ -81,8 +77,8 @@ public class FilterActivity extends ActionBarActivity {
             if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
                     && null != data) {
 
-                // just call convertPicture
-                prgDialog.show(FilterActivity.this, "Wait", "uploading...");
+                prgDialog = ProgressDialog.show(FilterActivity.this, "Wait", "uploading...");
+                prgDialog.setCancelable(false);
                 // Get the Image from data
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
